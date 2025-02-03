@@ -16,24 +16,6 @@ topic_name = "imagesData";   # change it for your topic name if needed
 publisher = pubsub_v1.PublisherClient()
 topic_path = publisher.topic_path(project_id, topic_name)
 print(f"Published messages with ordering keys to {topic_path}.")
-
-#iterate for 100 times 
-for n in range(100):
-    # get the value from the user
-    print('Enter a value (String):',end='')
-    message = input()
-    # stop if empty value is entered
-    if message=='':
-        break;
-    # convert the string to bytes (serialization)
-    message=str(message).encode('utf-8')
-    
-    # send the value
-    print("Producing a record: {}".format(message))    
-    future = publisher.publish(topic_path, message);
-    
-    #ensure that the publishing has been completed successfully
-    future.result()
  
 
 # Define the image directory
