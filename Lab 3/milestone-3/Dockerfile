@@ -9,3 +9,6 @@ RUN pip install -r ./requirements.txt
 
 # Run
 # docker run -it --ipc=host -v "$(pwd)"/Dataset_Occluded_Pedestrian:/datasets milestones/m3:latest
+
+# Run (via docker-compose)
+# docker compose up -d
