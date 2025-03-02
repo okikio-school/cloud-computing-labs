@@ -3,6 +3,13 @@ services:
     image: milestones/m3:latest  # Use the specified Docker image
     ipc: host                  # Use the host's IPC namespace (equivalent to --ipc=host)
     volumes:
-      - ./Dataset_Occluded_Pedestrian:/datasets  # Mount the host directory into the container
+      - ./datasets:/root/datasets  # Mount the host directory into the container
+      - ./src:/root/src  # Mount the host directory into the container
     stdin_open: true           # Keep STDIN open for interactive processes (equivalent to -it)
     tty: true                  # Allocate a pseudo-TTY (equivalent to -it)
+
+    runtime: nvidia  # Use the NVIDIA runtime for GPU support
+    # device_requests:             # Request GPU devices
+    #   - driver: nvidia
+    #     count: all               # Request all available NVIDIA GPUs
+    #     capabilities: [gpu]      # Specify the GPU capability
