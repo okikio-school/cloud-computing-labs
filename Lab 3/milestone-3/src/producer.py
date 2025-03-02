@@ -24,7 +24,9 @@ publisher = pubsub_v1.PublisherClient()
 topic_path = publisher.topic_path(project_id, topic_id)
 
 # Scan the datasets folder for images
-image_files = glob.glob("datasets/*.*")  # Adjust for specific formats if needed
+image_files = glob.glob("../datasets/*.*")  # Adjust for specific formats if needed
+
+print(image_files)
 for idx, image_path in enumerate(image_files):
     try:
         # Read the image and encode as base64

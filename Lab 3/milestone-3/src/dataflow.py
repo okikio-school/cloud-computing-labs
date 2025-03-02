@@ -41,6 +41,15 @@ class ProcessImageDoFn(beam.DoFn):
             self.transform = midas_transforms.small_transform
 
     def process(self, element):
+        from ultralytics import YOLO
+        from PIL import Image
+        import glob
+
+        import cv2
+        import torch
+        import numpy as np
+        import matplotlib.pyplot as plt
+        
         """
         To speed things up we'll encode the images as base64 strings and send them down the line.
         
