@@ -9,7 +9,6 @@ WORKDIR /root
 # Removes uv pip warnings about docker not being the same filesystem
 ENV UV_LINK_MODE=hardlink
 
-
 # Copy the checkpoints
 COPY checkpoints ./checkpoints
 
