@@ -1,5 +1,5 @@
 # Stage 0: GCP Apache Beam base dependencies
-FROM apache/beam_python3.9_sdk:2.63.0 AS beam
+FROM apache/beam_python3.12_sdk:2.63.0 AS beam
 
 # Stage 1: Build dependencies and setup environment
 FROM ultralytics/ultralytics:8.3.81-cpu AS builder
