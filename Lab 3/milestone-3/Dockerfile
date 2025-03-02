@@ -5,6 +5,11 @@ FROM apache/beam_python3.9_sdk:2.63.0 AS beam
 FROM ultralytics/ultralytics:8.3.81-cpu AS builder
 WORKDIR /root
 
+# Favor hardlinking if supported by ensuring both the pip cache and installation are on the same filesystem.
+# Removes uv pip warnings about docker not being the same filesystem
+ENV UV_LINK_MODE=hardlink
+
+
 # Copy the checkpoints
 COPY checkpoints ./checkpoints
 
@@ -13,12 +18,6 @@ COPY requirements.txt .
 
 # Install dependencies using a dedicated pip cache directory
 RUN --mount=type=cache,target=/root/.cache/pip uv pip install --system --compile-bytecode --cache-dir=/root/.cache/pip -r requirements.txt
-
-# Optionally copy the pip cache if you plan to add more dependencies later
-# COPY --from=builder /root/.cache /root/.cache
-
-# Optionally copy the checkpoint files
-# COPY --from=builder /root/checkpoints /root/checkpoints
 
 # Copy files from official SDK image, including script/dependencies.
 COPY --from=beam /opt/apache/beam /opt/apache/beam

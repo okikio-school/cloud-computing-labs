@@ -20,15 +20,20 @@ from apache_beam.options.pipeline_options import PipelineOptions, SetupOptions
 class ProcessImageDoFn(beam.DoFn):
     def setup(self):
         # Load YOLO model pretrained on COCO (e.g., yolov8n.pt)
+        # For some reason yolo11n is less accurate at recognizing people 
+        # so I switched to yolo8n.pt which is trained on the COCO dataset
+        # and ends up being way more accurate
         self.yolo_model = YOLO("checkpoints/yolov8n.pt")
         
         # Set up MiDaS for depth estimation.
+        # For accurate depth identification we're using DPT_Large
         model_type = "DPT_Large"  # Change to "MiDaS_small" or "DPT_Hybrid" for higher or lower accuracy.
         self.midas = torch.hub.load("intel-isl/MiDaS", model_type)
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         self.midas.to(self.device)
         self.midas.eval()
         
+        # Load Midas for depth mapping
         midas_transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
         if model_type in ["DPT_Large", "DPT_Hybrid"]:
             self.transform = midas_transforms.dpt_transform
@@ -37,10 +42,12 @@ class ProcessImageDoFn(beam.DoFn):
 
     def process(self, element):
         """
-        Expects a dict with:
+        To speed things up we'll encode the images as base64 strings and send them down the line.
+        
+        So the dataflow pipeline expects a dict with:
           - "ID": identifier for the image.
           - "Image": a base64-encoded string of the image.
-        Returns a dict with the ID and a list of detections; each detection contains the bounding box and average depth.
+        It should then return a dict with the ID and a list of detections; each detection contains the bounding box and average depth.
         """
         image_id = element.get("ID", "unknown")
         image_data = element.get("Image")
@@ -72,6 +79,7 @@ class ProcessImageDoFn(beam.DoFn):
             return
 
         # Filter detections for persons (COCO person class is index 0).
+        # We're using COCO as it is more accurate than pure Yolo11n
         person_boxes = []
         for result in yolo_results:
             for box in result.boxes:
