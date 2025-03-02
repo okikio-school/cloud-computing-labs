@@ -1,12 +1,3 @@
-from ultralytics import YOLO
-from PIL import Image
-import glob
-
-import cv2
-import torch
-import numpy as np
-import matplotlib.pyplot as plt
-
 import argparse
 import logging
 import base64
@@ -19,6 +10,15 @@ from apache_beam.options.pipeline_options import PipelineOptions, SetupOptions
 
 class ProcessImageDoFn(beam.DoFn):
     def setup(self):
+        from ultralytics import YOLO
+        from PIL import Image
+        import glob
+
+        import cv2
+        import torch
+        import numpy as np
+        import matplotlib.pyplot as plt
+
         # Load YOLO model pretrained on COCO (e.g., yolov8n.pt)
         # For some reason yolo11n is less accurate at recognizing people 
         # so I switched to yolo8n.pt which is trained on the COCO dataset

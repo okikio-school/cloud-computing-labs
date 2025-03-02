@@ -9,7 +9,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=files[0]
 
 # TODO : fill project id 
 project_id = "cloud-computing-449706"
-subscription_id = "mnist_predict-sub"
+subscription_id = "m3-output-sub"
 
 subscriber = pubsub_v1.SubscriberClient()
 subscription_path = subscriber.subscription_path(project_id, subscription_id)
