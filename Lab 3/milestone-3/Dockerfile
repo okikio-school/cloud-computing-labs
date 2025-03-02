@@ -28,7 +28,7 @@ COPY --from=beam /opt/apache/beam /opt/apache/beam
 CMD ["bash"]
 
 # Set the entrypoint to Apache Beam SDK launcher.
-# ENTRYPOINT ["/opt/apache/beam/boot"]
+ENTRYPOINT ["/opt/apache/beam/boot"]
 
 
 # Build
