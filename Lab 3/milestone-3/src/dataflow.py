@@ -37,7 +37,7 @@ class ProcessImageDoFn(beam.DoFn):
         
         # Set up MiDaS for depth estimation.
         # For accurate depth identification we're using DPT_Large
-        model_type = "DPT_Large"  # Change to "MiDaS_small" or "DPT_Hybrid" for higher or lower accuracy.
+        model_type = "MiDaS_small"  # Change to "MiDaS_small" or "DPT_Hybrid" for higher or lower accuracy.
 
         # Explicitly specify the MiDaS repository with the correct branch ("main") using the git+ URL.
         self.midas = torch.hub.load("intel-isl/MiDaS", model_type, trust_repo=True)

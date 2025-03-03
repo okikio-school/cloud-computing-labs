@@ -19,9 +19,9 @@ torch.hub.set_dir(torch_cache_dir)
 model = YOLO("./checkpoints/yolov8n.pt") # "checkpoints/yolo11n.pt"
 
 # Load a model (see https://github.com/intel-isl/MiDaS/#Accuracy for an overview)
-model_type = "DPT_Large"     # MiDaS v3 - Large     (highest accuracy, slowest inference speed)
+# model_type = "DPT_Large"     # MiDaS v3 - Large     (highest accuracy, slowest inference speed)
 # model_type = "DPT_Hybrid"   # MiDaS v3 - Hybrid    (medium accuracy, medium inference speed)
-# model_type = "MiDaS_small"  # MiDaS v2.1 - Small   (lowest accuracy, highest inference speed)
+model_type = "MiDaS_small"  # MiDaS v2.1 - Small   (lowest accuracy, highest inference speed)
 
 midas = torch.hub.load("intel-isl/MiDaS", model_type, trust_repo=True)
 
