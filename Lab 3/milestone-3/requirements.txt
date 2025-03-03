@@ -9,3 +9,4 @@ onnxslim
 onnxruntime
 wheel
 apache-beam[gcp]
+ultralytics

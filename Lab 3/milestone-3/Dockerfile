@@ -15,8 +15,12 @@ COPY checkpoints ./checkpoints
 # Copy just the requirements file first so that Docker can cache the pip install step
 COPY requirements.txt .
 
+# Copy just the env-setup.py file first so that Docker can cache models
+COPY env-setup.py .
+
 # Install dependencies using a dedicated pip cache directory
 RUN --mount=type=cache,target=/root/.cache/pip uv pip install --system --compile-bytecode --cache-dir=/root/.cache/pip -r requirements.txt
+RUN python env-setup.py
 
 # Copy files from official SDK image, including script/dependencies.
 COPY --from=beam /opt/apache/beam /opt/apache/beam

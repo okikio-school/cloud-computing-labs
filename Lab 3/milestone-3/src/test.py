@@ -7,6 +7,14 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Set a dedicated cache directory to avoid conflicts on Dataflow workers.
+torch_cache_dir = './checkpoints/torch_cache'
+# os.makedirs(torch_cache_dir, exist_ok=True)
+# os.environ['TORCH_HOME'] = torch_cache_dir
+
+# Alternatively, you can set the cache directory using torch.hub.set_dir:
+torch.hub.set_dir(torch_cache_dir)
+
 # import argparse
 # import json
 # import logging
@@ -24,7 +32,7 @@ model = YOLO("checkpoints/yolov8n.pt") # "checkpoints/yolo11n.pt"
 
 # Set up MiDaS model
 model_type = "DPT_Large"  # Adjust model type as needed (e.g., "DPT_Large" for higher accuracy)
-midas = torch.hub.load("intel-isl/MiDaS", model_type)
+midas = torch.hub.load("intel-isl/MiDaS", model_type, trust_repo=True)
 
 # Move model to GPU if available
 if torch.cuda.is_available():
@@ -48,7 +56,7 @@ else:
 # Process Images from Glob
 # ---------------------------
 # Use glob to obtain a list of image paths (update the pattern as needed)
-img_paths = glob.glob("/datasets/[AC]_*.*")
+img_paths = glob.glob("./datasets/[AC]_*.*")
 # img_paths = glob.glob("/datasets/A_004.png")
 
 if not img_paths:

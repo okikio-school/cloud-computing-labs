@@ -12,12 +12,14 @@ class ProcessImageDoFn(beam.DoFn):
     def setup(self):
         import os
         import torch
+
         # Set a dedicated cache directory to avoid conflicts on Dataflow workers.
-        torch_cache_dir = '/tmp/torch_cache'
-        os.makedirs(torch_cache_dir, exist_ok=True)
-        os.environ['TORCH_HOME'] = torch_cache_dir
+        torch_cache_dir = './checkpoints/torch_cache'
+        # os.makedirs(torch_cache_dir, exist_ok=True)
+        # os.environ['TORCH_HOME'] = torch_cache_dir
+
         # Alternatively, you can set the cache directory using torch.hub.set_dir:
-        # torch.hub.set_dir(torch_cache_dir)
+        torch.hub.set_dir(torch_cache_dir)
 
         from ultralytics import YOLO
         from PIL import Image
@@ -36,10 +38,17 @@ class ProcessImageDoFn(beam.DoFn):
         # Set up MiDaS for depth estimation.
         # For accurate depth identification we're using DPT_Large
         model_type = "DPT_Large"  # Change to "MiDaS_small" or "DPT_Hybrid" for higher or lower accuracy.
-        self.midas = torch.hub.load("intel-isl/MiDaS", model_type)
+
+        # Explicitly specify the MiDaS repository with the correct branch ("main") using the git+ URL.
+        self.midas = torch.hub.load("intel-isl/MiDaS", model_type, trust_repo=True)
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         self.midas.to(self.device)
         self.midas.eval()
+
+        # self.midas = torch.hub.load("intel-isl/MiDaS", model_type)
+        # self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        # self.midas.to(self.device)
+        # self.midas.eval()
         
         # Load Midas for depth mapping
         midas_transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
