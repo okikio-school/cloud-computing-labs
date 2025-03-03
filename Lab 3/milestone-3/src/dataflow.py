@@ -10,12 +10,20 @@ from apache_beam.options.pipeline_options import PipelineOptions, SetupOptions
 
 class ProcessImageDoFn(beam.DoFn):
     def setup(self):
+        import os
+        import torch
+        # Set a dedicated cache directory to avoid conflicts on Dataflow workers.
+        torch_cache_dir = '/tmp/torch_cache'
+        os.makedirs(torch_cache_dir, exist_ok=True)
+        os.environ['TORCH_HOME'] = torch_cache_dir
+        # Alternatively, you can set the cache directory using torch.hub.set_dir:
+        # torch.hub.set_dir(torch_cache_dir)
+
         from ultralytics import YOLO
         from PIL import Image
         import glob
 
         import cv2
-        import torch
         import numpy as np
         import matplotlib.pyplot as plt
 
