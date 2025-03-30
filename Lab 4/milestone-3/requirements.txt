@@ -1,0 +1,12 @@
+torch
+torchvision
+timm
+numpy<2
+pillow_heif
+matplotlib
+onnx>=1.12.0
+onnxslim
+onnxruntime
+wheel
+apache-beam[gcp]
+ultralytics
